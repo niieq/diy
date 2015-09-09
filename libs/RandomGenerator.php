@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Unbiased random password generator.
+ * Unbiased random key generator.
  * Copyright (c) 2015, Taylor Hornby
  * All rights reserved.
  *
@@ -32,31 +32,31 @@ class ExtremelyUnlikelyRandomnessException extends Exception {
     
 }
 
-class PasswordGenerator {
+class RandomGenerator {
 
-    public static function getASCIIPassword($length) {
+    public static function getASCIIGenerator($length) {
         $printable = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-        return self::getCustomPassword(str_split($printable), $length);
+        return self::getCustomGenerator(str_split($printable), $length);
     }
 
-    public static function getAlphaNumericPassword($length) {
+    public static function getAlphaNumericGenerator($length) {
         $alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        return self::getCustomPassword(str_split($alphanum), $length);
+        return self::getCustomGenerator(str_split($alphanum), $length);
     }
 
-    public static function getHexPassword($length) {
+    public static function getHexGenerator($length) {
         $hex = "0123456789ABCDEF";
-        return self::getCustomPassword(str_split($hex), $length);
+        return self::getCustomGenerator(str_split($hex), $length);
     }
 
     /*
-     * Create a random password composed of a custom character set.
-     * $characterSet - An *array* of strings the password can be composed of.
-     * $length - The number of random strings (in $characterSet) to include in the password.
+     * Create a random key composed of a custom character set.
+     * $characterSet - An *array* of strings the key can be composed of.
+     * $length - The number of random strings (in $characterSet) to include in the key.
      * Returns false on error (always check!).
      */
 
-    public static function getCustomPassword($characterSet, $length) {
+    public static function getCustomGenerator($characterSet, $length) {
         if ($length < 1 || !is_array($characterSet)){
             return false;
         }
@@ -69,9 +69,9 @@ class PasswordGenerator {
         $random = self::getRandomInts($length * 2);
         $mask = self::getMinimalBitMask($charSetLen - 1);
 
-        $password = "";
+        $key = "";
 
-        // To generate the password, we repeatedly try random integers and use the ones within the range
+        // To generate the key, we repeatedly try random integers and use the ones within the range
         // 0 to $charSetLen - 1 to select an index into the character set. This is the only known way to
         // make a truly unbiased random selection from a set using random binary data.
         // A poorly implemented or malicious RNG could cause an infinite loop, leading to a denial of service.
@@ -79,9 +79,9 @@ class PasswordGenerator {
         // It is extremely unlikely (about 2^-64) that more than $length*64 random ints are needed.
         $iterLimit = max($length, $length * 64);   // If length is close to PHP_INT_MAX we don't want to overflow.
         $randIdx = 0;
-        while (self::safeStrlen($password) < $length) {
+        while (self::safeStrlen($key) < $length) {
             if ($randIdx >= count($random)) {
-                $random = self::getRandomInts(2 * ($length - strlen($password)));
+                $random = self::getRandomInts(2 * ($length - strlen($key)));
                 $randIdx = 0;
             }
 
@@ -89,17 +89,17 @@ class PasswordGenerator {
             $c = $random[$randIdx++] & $mask;
             // Only use the random number if it is in range, otherwise try another (next iteration).
             if ($c < $charSetLen){
-                $password .= self::sidechannel_safe_array_index($characterSet, $c);
+                $key .= self::sidechannel_safe_array_index($characterSet, $c);
             }
             // FIXME: check the return value
             // Guarantee termination
             $iterLimit--;
             if ($iterLimit <= 0) {
-                throw new ExtremelyUnlikelyRandomnessException("Hit iteration limit when generating password.");
+                throw new ExtremelyUnlikelyRandomnessException("Hit iteration limit when generating key.");
             }
         }
 
-        return $password;
+        return $key;
     }
 
     // FIXME: This function needs unit tests!

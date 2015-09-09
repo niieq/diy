@@ -2,7 +2,8 @@
 
 /**
  * @author      Obed Ademang <kizit2012@gmail.com>
- * @license     GNU General Public License 3 (http://www.gnu.org/licenses/)
+ * @copyright   Copyright (C), 2015 Obed Ademang
+ * @license     MIT LICENSE (https://opensource.org/licenses/MIT)
  *              Refer to the LICENSE file distributed within the package.
  *
  */

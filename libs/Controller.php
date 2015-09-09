@@ -2,8 +2,8 @@
 
 /**
  * @author      Obed Ademang <kizit2012@gmail.com>
- * @copyright   Copyright (C), 2015 - 16 DAPQA, UCC
- * @license     GNU General Public License 3 (http://www.gnu.org/licenses/)
+ * @copyright   Copyright (C), 2015 Obed Ademang
+ * @license     MIT LICENSE (https://opensource.org/licenses/MIT)
  *              Refer to the LICENSE file distributed within the package.
  *
  * 
@@ -16,7 +16,7 @@ class Controller {
         Session::init(); //Begin session on every page ...
         $this->view = new View(); //Controls view processes ...
         $this->formData = new Form(); //Controls form data pasing ...
-        $this->view->title = 'Quality Assurance System'; //Global default title ...
+        $this->view->title = 'DIY PHP Framework'; //Global default title ...
     }
 
     public function loadModel($name = NULL) {

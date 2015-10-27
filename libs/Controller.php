@@ -16,15 +16,13 @@ class Controller {
         Session::init(); //Begin session on every page ...
         $this->view = new View(); //Controls view processes ...
         $this->formData = new Form(); //Controls form data pasing ...
-        $this->view->title = 'DIY PHP Framework'; //Global default title ...
     }
 
-    public function loadModel($name = NULL) {
-        $path = (empty($name)) ? 'models/index_model.php' : 'models/' . $name . '_model.php';
-
+    public function loadModel($name, $modelPath = 'model/') {
+        (empty($name)) ? die("Expects a name of a model to load!!") : $path = $modelPath . $name . '_model.php';
         if (file_exists($path)) {
             require $path;
-            $modelName = (empty($name)) ? 'Index_Model' : $name . '_Model';
+            $modelName = $name . '_Model';
             $this->model = new $modelName();
         }
     }
@@ -56,11 +54,4 @@ class Controller {
     public function fetchSuccessMessage(){
         return apc_fetch('successMessage');
     }
-
-    public function json($data){
-        if(is_array($data)){
-            return json_encode($data);
-        }
-    }
-
 }

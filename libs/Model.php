@@ -6,21 +6,13 @@
  * @license     MIT LICENSE (https://opensource.org/licenses/MIT)
  *              Refer to the LICENSE file distributed within the package.
  *
- * 
  */
 class Model {
-
-    function __construct() {
-
-        $config = array(
-            'type' => DB_TYPE,
-            'host' => DB_HOST,
-            'name' => DB_NAME,
-            'user' => DB_USER,
-            'pass' => DB_PASS
-        );
-
-        $this->dbase = new Database($config);
+    private $_dbConfig = [];
+    
+    public function __construct() {
+        $this->_dbconfig = unserialize(DATABASE);
+        $this->dbase = new Database($this->_dbConfig);
     }
 
 }

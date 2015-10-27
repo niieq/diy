@@ -1,3 +1,5 @@
 public/libs/vendor
 config.php
 vendor
+/nbproject/
+app/*

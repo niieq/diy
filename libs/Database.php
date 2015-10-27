@@ -53,7 +53,7 @@ class Database extends PDO {
      *  // Second Way:
      *  $db = new Database(null, 'mysql', 'localhost', 'test', 'root', '');
      */
-    public function __construct($db, $type = null, $host = null, $name = null, $user = null, $pass = null, $persistent = false) {
+    public function __construct($db, $type = null, $host = null, $name = null, $user = null, $passwd = null, $persistent = false) {
         try {
             /** Connect with arguments */
             if ($db == false || $db == null) {
@@ -61,7 +61,7 @@ class Database extends PDO {
             }
             /** Connect with assoc array */ else {
                 $persistent = isset($db['persistent']) ? $db['persistent'] : false;
-                parent::__construct("{$db['type']}:host={$db['host']};dbname={$db['name']}", $db['user'], $db['pass'], array(PDO::ATTR_PERSISTENT => $persistent));
+                parent::__construct("{$db['type']}:host={$db['host']};dbname={$db['name']}", $db['user'], $db['passwd'], array(PDO::ATTR_PERSISTENT => $persistent));
             }
         } catch (PDOException $e) {
             die($e->getMessage());
@@ -395,23 +395,4 @@ class Database extends PDO {
             throw new Exception($error);
         }
     }
-
-    public function create_table($query){
-        $this->_sql = $query;
-        $result = $this->exec($this->_sql);
-        return $result;
-    }
-
-    public function rename_table($table, $to){
-        $this->_sql = "RENAME TABLE {$table} TO {$to};";
-        $result = $this->exec($this->_sql);
-        return $result;
-    }
-
-    public function alter_table_structure($query){
-        $this->_sql = $query;
-        $result = $this->exec($this->_sql);
-        return $result;
-    }
-
 }

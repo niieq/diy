@@ -96,10 +96,8 @@ class Bootstrap {
     public function setBasePath($path){
         $this->_basePath = trim($path, '/') . '/';
         //die($this->_basePath);
-        if($path !== ''){
-            $fh = fopen($this->_basePath . '.htaccess', 'w');
-            fwrite($fh, 'Options -Indexes');
-            fclose($fh);
+        if($path === ''){
+            die("You need to set a base path for the main app!!!");
         }
     }
     

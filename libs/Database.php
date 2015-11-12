@@ -57,7 +57,7 @@ class Database extends PDO {
         try {
             /** Connect with arguments */
             if ($db == false || $db == null) {
-                parent::__construct("{$type}:host={$host};dbname={$name}", $user, $pass, array(PDO::ATTR_PERSISTENT => $persistent));
+                parent::__construct("{$type}:host={$host};dbname={$name}", $user, $passwd, array(PDO::ATTR_PERSISTENT => $persistent));
             }
             /** Connect with assoc array */ else {
                 $persistent = isset($db['persistent']) ? $db['persistent'] : false;

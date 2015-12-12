@@ -1,6 +1,10 @@
 <?php
 
 class DUtil {
+    /**
+     * @param $name
+     * @param $data
+     */
     public static function send_data($name, $data) {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -9,6 +13,10 @@ class DUtil {
         $_SESSION[$name] = $data;
     }
 
+    /**
+     * @param $name
+     * @return null
+     */
     public static function get_data($name) {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -21,6 +29,13 @@ class DUtil {
         }
     }
 
+    /**
+     * @param $input
+     * @param $length
+     * @param bool|true $ellipses
+     * @param bool|true $strip_html
+     * @return string
+     */
     public static function trim_text($input, $length, $ellipses = true, $strip_html = true) {
         if ($strip_html === true) {
             $input = strip_tags($input);
@@ -40,11 +55,18 @@ class DUtil {
         return $trimmed_text;
     }
 
+    /**
+     * @param $arr
+     * @return bool
+     */
     public static function is_multiArray($arr) {
         $rv = array_filter($arr,'is_array');
         return (count($rv)>0) ? true : false;
     }
 
+    /**
+     * @return mixed
+     */
     public static function get_ip(){
         if(function_exists('apache_request_headers')){
             $headers = apache_request_headers();
@@ -65,6 +87,10 @@ class DUtil {
         return $the_ip;
     }
 
+    /**
+     * @param $data
+     * @param null $filename
+     */
     public static function createCSV($data, $filename = null){
         if(!isset($filename)){
             $filename = "replies";
@@ -93,20 +119,23 @@ class DUtil {
         //Close the file handle.
         fclose($fp);
     }
-    
-    /*
-     *
-     * @param string $algo The hashing algorithm eg(md5, sha256 etc)
-     * @param string $data The data that is going to be encoded
-     * @param string $salt The key used as salt
-     * @return string The hashed/salted data
+
+    /**
+     * @param $algo - The hashing algorithm eg(md5, sha256 etc)
+     * @param $data - The data that is going to be encoded
+     * @param $salt - The key used as salt
+     * @return string - The hashed/salted data
      */
     public static function hash_value($algo, $data, $salt) {
         $context = hash_init($algo, HASH_HMAC, $salt);
         hash_update($context, $data);
         return hash_final($context);
     }
-    
+
+    /**
+     * @param $data
+     * @return string
+     */
     public static function json($data){
         if(is_array($data)){
             return json_encode($data);

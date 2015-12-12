@@ -34,28 +34,42 @@ class ExtremelyUnlikelyRandomnessException extends Exception {
 
 class DRand {
 
+    /**
+     * @param $length
+     * @return bool|string
+     * @throws ExtremelyUnlikelyRandomnessException
+     */
     public static function getASCIIGen($length) {
         $printable = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
         return self::getCustomGen(str_split($printable), $length);
     }
 
+    /**
+     * @param $length
+     * @return bool|string
+     * @throws ExtremelyUnlikelyRandomnessException
+     */
     public static function getAlphaNumericGen($length) {
         $alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         return self::getCustomGen(str_split($alphanum), $length);
     }
 
+    /**
+     * @param $length
+     * @return bool|string
+     * @throws ExtremelyUnlikelyRandomnessException
+     */
     public static function getHexGen($length) {
         $hex = "0123456789ABCDEF";
         return self::getCustomGen(str_split($hex), $length);
     }
 
-    /*
-     * Create a random key composed of a custom character set.
-     * $characterSet - An *array* of strings the key can be composed of.
-     * $length - The number of random strings (in $characterSet) to include in the key.
-     * Returns false on error (always check!).
+    /**
+     * @param $characterSet - An *array* of strings the key can be composed of.
+     * @param $length - The number of random strings (in $characterSet) to include in the key.
+     * @return bool|string
+     * @throws ExtremelyUnlikelyRandomnessException
      */
-
     public static function getCustomGen($characterSet, $length) {
         if ($length < 1 || !is_array($characterSet)){
             return false;
@@ -103,6 +117,12 @@ class DRand {
     }
 
     // FIXME: This function needs unit tests!
+    /**
+     * @param $min_inclusive
+     * @param $max_inclusive
+     * @return mixed
+     * @throws ExtremelyUnlikelyRandomnessException
+     */
     public static function getRandomInt($min_inclusive, $max_inclusive) {
         if ($min_inclusive > $max_inclusive) {
             throw new InvalidArgumentException("min is greater than max.");
@@ -141,6 +161,11 @@ class DRand {
     }
 
     // Returns the character at index $index in $string in constant time.
+    /**
+     * @param $string
+     * @param $index
+     * @return bool|string
+     */
     private static function sidechannel_safe_array_index($string, $index) {
         // FIXME: Make the const-time hack below work for all integer sizes, or
         // check it properly.
@@ -158,6 +183,10 @@ class DRand {
 
     // Returns the smallest bit mask of all 1s such that ($toRepresent & mask) = $toRepresent.
     // $toRepresent must be an integer greater than or equal to 1.
+    /**
+     * @param $toRepresent
+     * @return int
+     */
     private static function getMinimalBitMask($toRepresent) {
         if ($toRepresent < 1) {
             throw new InvalidArgumentException("Non-positive integer passed to getMinimalBitMask.");
@@ -170,6 +199,10 @@ class DRand {
     }
 
     // Returns an array of $numInts random integers between 0 and PHP_INT_MAX
+    /**
+     * @param $numInts
+     * @return array
+     */
     public static function getRandomInts($numInts) {
         $ints = array();
         if ($numInts <= 0) {
@@ -188,6 +221,10 @@ class DRand {
         return $ints;
     }
 
+    /**
+     * @param $str
+     * @return int
+     */
     public static function safeStrlen($str) {
         if (function_exists('mb_strlen')) {
             return mb_strlen($str, '8bit');

@@ -32,13 +32,15 @@ class Database extends PDO {
 
     /**
      * __construct - Initializes a PDO connection (Two ways of connecting)
-     * 
+     *
      * @param array $db An associative array containing the connection settings,
      * @param string $type Optional if using arugments to connect
      * @param string $host Optional if using arugments to connect
      * @param string $name Optional if using arugments to connect
      * @param string $user Optional if using arugments to connect
-     * @param string $pass Optional if using arugments to connect
+     * @param null $passwd
+     * @param bool $persistent
+     * @internal param string $pass Optional if using arugments to connect
      *
      *  // First Way:
      *    $db = array(
@@ -79,16 +81,16 @@ class Database extends PDO {
 
     /**
      * select - Run & Return a Select Query
-     * 
+     *
      * @param string $query Build a query with ? marks in the proper order,
      *    eg: SELECT :email, :password FROM tablename WHERE userid = :userid
-     * 
-     * @param array $bindParams Fields The fields to select to replace the :colin marks,
+     *
+     * @param array $bindParams Fields The fields to select to replace the :colon marks,
      *    eg: array('email' => 'email', 'password' => 'password', 'userid' => 200);
      *
      * @param constant $overrideFetchMode Pass in a PDO::FETCH_MODE to override the default or the setFetchMode setting
-     *
      * @return array
+     * @throws Exception
      */
     public function select($query, $bindParams = array(), $overrideFetchMode = null) {
         /** Store the SQL for use with fetching it when desired */
@@ -118,8 +120,9 @@ class Database extends PDO {
     /**
      * insert - Convenience method to insert data
      *
-     * @param string $table    The table to insert into
-     * @param array $data    An associative array of data: field => value
+     * @param string $table The table to insert into
+     * @param array $data An associative array of data: field => value
+     * @return string
      */
     public function insert($table, $data) {
         /** Prepare SQL Code */
@@ -232,8 +235,9 @@ class Database extends PDO {
     /**
      * insertUpdate - Convenience method to insert/if key exists update.
      *
-     * @param string $table    The table to insert into
-     * @param array $data    An associative array of data: field => value
+     * @param string $table The table to insert into
+     * @param array $data An associative array of data: field => value
+     * @return string
      */
     public function insertUpdate($table, $data) {
         /** Prepare SQL Code */
@@ -303,6 +307,7 @@ class Database extends PDO {
      * showColumns - Display the columns for a table (MySQL)
      *
      * @param string $table Name of a MySQL table
+     * @return array
      */
     public function showColumns($table) {
         $result = $this->select("SHOW COLUMNS FROM `$table`", array(), PDO::FETCH_ASSOC);
@@ -323,8 +328,7 @@ class Database extends PDO {
      * _prepareAndBind - Binds values to the Statement Handler
      *
      * @param array $data
-     * @param object $reuseStatement If you need to reuse the statement to apply another bind
-     *
+     * @param bool|object $reuseStatement If you need to reuse the statement to apply another bind
      * @return object
      */
     private function _prepareAndBind($data, $reuseStatement = false) {
@@ -383,6 +387,9 @@ class Database extends PDO {
 
     /**
      * _handleError - Handles errors with PDO and throws an exception.
+     * @param $result
+     * @param $method
+     * @throws Exception
      */
     private function _handleError($result, $method) {
         /** If it's an SQL error */

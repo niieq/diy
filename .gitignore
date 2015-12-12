@@ -1,8 +1,8 @@
 public/libs/vendor
 config.php
 vendor
-/nbproject/
 app/*
 releases/
 .directory
+.idea/*
 

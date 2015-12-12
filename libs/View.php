@@ -13,8 +13,11 @@ class View {
     private $_loader;
     private $_twig;
     public $templateData = [];
-    
-    
+
+
+    /**
+     * View constructor.
+     */
     public function __construct() {
         Session::init();
         
@@ -28,11 +31,18 @@ class View {
             die("Please set the path to your templates");
         }
     }
-    
+
+    /**
+     * @param $name
+     * @param $value
+     */
     public function dexport($name, $value){
         $this->templateData[$name] = $value;
     }
 
+    /**
+     * @param $templateName
+     */
     public function render($templateName) {
         $templateFile = $templateName . '.twig';
         

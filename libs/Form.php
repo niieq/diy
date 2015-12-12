@@ -92,10 +92,12 @@ class Form {
     // ------------------------------------------------------------------------
 
     /**
-     * post - Retrieves $_POST data and saves it to the object 
+     * post - Retrieves $_POST data and saves it to the object
      *
      * @param string $name The name of the field to post
-     * @param string $required_or_checkbox (Default = false) true/false/checkbox When set to true && the value is NULL: Unset the value internally and do validate.
+     * @param bool|string $required_or_checkbox (Default = false) true/false/checkbox When set to true && the value is NULL: Unset the value internally and do validate.
+     * @return Form
+     * @throws Exception
      */
     public function post($name, $required_or_checkbox = false) {
         $this->_mode = 'POST';
@@ -105,10 +107,12 @@ class Form {
     // ------------------------------------------------------------------------
 
     /**
-     * get - Retrieves $_GET data and saves it to the object 
+     * get - Retrieves $_GET data and saves it to the object
      *
      * @param string $name The name of the item to get
-     * @param string $required (Default = false) When set to true && the value is NULL: Unset the value internally and do validate.
+     * @param bool|string $required (Default = false) When set to true && the value is NULL: Unset the value internally and do validate.
+     * @return Form
+     * @throws Exception
      */
     public function get($name, $required = false) {
         $this->_mode = 'GET';
@@ -119,6 +123,10 @@ class Form {
 
     /**
      * request - Handles the $_REQUEST data
+     * @param $name
+     * @param bool $required
+     * @return Form
+     * @throws Exception
      */
     public function request($name, $required = false) {
         $this->_mode = 'REQUEST';
@@ -173,6 +181,7 @@ class Form {
          * If this is not required, we skip it when the value is null
          * This is so something can post and someone can EDIT on a few fields at a time
          */
+        /** @var mixed $input */
         if ($required == false && $input == null) {
             /** An internal flag to prevent the validator from running */
             $this->_currentRecord = null;
@@ -193,7 +202,7 @@ class Form {
         $this->_inputData[$name] = $input;
 
         /**
-         * Hold on to the immediate record incase validation is called next 
+         * Hold on to the immediate record in case validation is called next
          */
         $this->_currentRecord['key'] = &$name;
         $this->_currentRecord['value'] = &$this->_inputData[$name];
@@ -227,9 +236,10 @@ class Form {
 
     /**
      * format - Format the Input contents internally
-     * 
+     *
      * @param string $type The name of a function such as md5, trim, etc
-     * @param mixed $param Additional parameters for formatting 
+     * @param mixed $param Additional parameters for formatting
+     * @return $this
      */
     public function format($type, $param = null) {
         /** Instantiate the format class only if it's used */
@@ -256,10 +266,11 @@ class Form {
 
     /**
      * validate - Validates the current POST item
-     * 
+     *
      * @param string $action
      * @param array $param If validating length, do .. ->validate('length', array(1, 4));
      * @param mixed $option If validating matchany lowercase, do .. ->validate('matchany', array('Jesse', 'Joe'), false);
+     * @return $this
      */
     public function validate($action, $param = array(), $option = null) {
         /**
@@ -341,10 +352,10 @@ class Form {
 
     /**
      * submit - Processes the entire form and gather errors if any exist
-     *
-     * @param boolean $preserveTemp Keep the previous post data inside a Session 
-     *
      * @return mixed False for no errors, True (With data) for errors.
+     * @throws Exception
+     * @internal param bool $preserveTemp Keep the previous post data inside a Session
+     *
      */
     public function submit() {
         if (session_id() != '' && $this->_storeSession == true) {
@@ -363,8 +374,8 @@ class Form {
      * the very end of a systems operations.
      */
     public static function clearSessionTemp() {
-        if (isset($_SESSION[$this->_sessionTemp])) {
-            unset($_SESSION[$this->_sessionTemp]);
+        if (isset($_SESSION[Form::_sessionTemp])) {
+            unset($_SESSION[Form::_sessionTemp]);
         }
     }
 

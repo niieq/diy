@@ -1,4 +1,4 @@
-public/static/vendor
+public/cache/*
 config.php
 vendor
 app/*

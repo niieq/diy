@@ -25,3 +25,45 @@
      * It is recommended that you make these constants as descriptive as possible.
      */
     define('HASH_PASSWORD_KEY', 'f686505c2f813f91e7fe871fdc127ece');
+
+
+<?php
+
+    // All configurations can be found in here.
+
+    # Application directories ...
+    # This is just an example. In your own app the values might change ...
+    define('APP_CONFIG',
+        serialize(array(
+            'baseDir' => 'app/', # This can be anything. It should contain the controller and model folders ...
+            'controllersDir' => 'controllers/',
+            'modelsDir' => 'models/',
+            'defaultController' => 'home',
+            'defaultMethod' => 'index'
+        )));
+
+    # Database constants ...
+    define('DATABASE',
+        serialize(array(
+            'type' => 'mysql',
+            'host' => 'localhost',
+            'name' => '',
+            'user' => '',
+            'passwd' => '',
+            'persistent' => false
+        )));
+
+    # Templates loader ...
+    define('TEMPLATES',
+        serialize(array(
+            'templateDir' => 'public/templates',
+            'cacheDir' => 'public/cache'
+        )));
+
+    # Secret key. Make sure you don't change this key whilst in production ....
+    # Used mostly for hashing ...
+    # You could add more hash keys by just defining one.
+    define('SECRET_KEY', 'f686505c2f813f91e7fe871fdc127ece');
+
+    # Paths. Make sure you put a trailing slash(/) infront of all your paths!!!
+    define('BASE_URL', 'http://localhost/~nene/diy-framework/');

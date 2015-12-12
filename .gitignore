@@ -1,8 +1,9 @@
-public/libs/vendor
+public/static/vendor
 config.php
 vendor
 app/*
 releases/
 .directory
 .idea/*
+public/templates/*/*
 

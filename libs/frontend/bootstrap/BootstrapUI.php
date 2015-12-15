@@ -12,16 +12,18 @@ class BootstrapUI extends Frontend {
      * BootstrapUI constructor.
      */
     public function __construct() {
-        $this->setPathToStatics(
-            array(
-                'css' => 'public/static/vendor/bootstrap/dist/css/bootstrap.min.css',
-                'js' => 'public/static/vendor/bootstrap/dist/js/bootstrap.min.js'
-            )
-        );
+        $cssPath = "public/static/vendor/bootstrap/dist/css/bootstrap.min.css";
+        $fonts = "public/static/vendor/font-awesome/css/font-awesome.min.css";
+        $jQuery = "public/static/vendor/jquery/dist/jquery.min.js";
+        $jsPath = "public/static/vendor/bootstrap/dist/js/bootstrap.min.js";
+
+        $this->setPathToStatics(array(
+            'css' => array('bts' => $cssPath, 'fonts' => $fonts),
+            'js' => array('jQuery' => $jQuery, 'bts' => $jsPath)
+        ));
     }
 
     /**
-     * @param $color
      * @param array $items
      * @param array $attr
      * @return mixed|void
@@ -39,40 +41,56 @@ class BootstrapUI extends Frontend {
      *              'contrast' => 'dark' | 'light',
      *              'brandName' => 'MyCompany' | '',
      *              'logoPath' => 'path/to/image' | '',
-     *              'style' => 'background-color:#aacc99' | '',
      *              'alignment' => 'left' | 'right',
      *              'search' => True | False,
      *              'searchAlignment' => 'right' | 'left',
      *              'searchTarget' => 'processUrl',
-     *              'searchBtnClass' => 'any bootstrap button class'
+     *              'searchBtnClass' => 'any bootstrap button class',
+     *              'centerContent' => True | False
      *          )
      */
-    public function navigation($color, $items = array(), $attr = array()) {
+    public function navigation($items = array(), $attr = array()) {
         $mainNav = "";
+        $navCollapsible = "";
         $searchForm = "";
-        $markUp = ($attr['fixed'] === True) ? "<nav class='navbar navbar-fixed-top " : "<nav class='navbar ";
-        $markUp .= ($color !== "") ? "{$attr['contrast']} {$color}'>" : "{$attr['contrast']}' style='{$attr['style']}'>";
 
-        $markUp .= ($attr['brandName'] !== "") ? "<a class='navbar-brand' href='/'>{$attr['brandName']}</a>" :
-            "<a class='navbar-brand' href='/'><img src='{$attr['logoPath']}'></a>";
+        $markUp = ($attr['fixed'] !== False) ? "<nav class='navbar navbar-fixed-{$attr['fixed']} " : "<nav class='navbar ";
+        $markUp .= ($attr['contrast'] !== "dark") ? "navbar-default'>" : "navbar-inverse'>";
 
-        $markUp .= "<ul class='nav navbar-nav pull-{$attr['alignment']}'>";
+        $navCollapsible .= ($attr['centerContent'] === True) ? "<div class='container'><div class='navbar-header'>" : "<div class='container-fluid'><div class='navbar-header'>";
+        $navCollapsible .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#navContent' aria-expanded='false'>";
+        $navCollapsible .= "<span class='sr-only'>Toggle navigation</span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span></button>";
+        $navCollapsible .= (count($attr['brandName']) !== 0) ? "<a class='navbar-brand' href='{$attr['brandName']['url']}'>{$attr['brandName']['name']}</a></div>" :
+            "<a class='navbar-brand' href='/'><img src='{$attr['logoPath']}'></a></div>";
+
+        $markUp .= $navCollapsible;
+        $markUp .= "<div class='collapse navbar-collapse' id='navContent'>";
+        $markUp .= "<ul class='nav navbar-nav navbar-{$attr['alignment']}'>";
 
         foreach($items as $key => $item){
-            if(DUtil::is_multiArray($item) == True) {
-                $name = ucfirst($key);
-                $mainNav .= "<li class='nav-item dropdown'>";
-                $mainNav .= "<a class='nav-link dropdown-toggle' data-toggle='dropdown' href='#' role='button' aria-haspopup='true' aria-expanded='false'>{$name}</a>";
-                $mainNav .= "<div class='dropdown-menu' aria-labelledby='Preview'>";
+            if(DUtil::is_multiArray($item) === True) {
+                $elements = explode('/', $key);
+                $name = ucfirst($elements[0]);
+                $icon = (count($elements) > 1) ? $elements[1] : '';
+                $mainNav .= "<li class='dropdown'>";
+                $mainNav .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#' role='button' aria-haspopup='true' aria-expanded='false'>";
+                $mainNav .= ($icon !== '') ? "<i class='fa fa-{$icon}'></i> {$name} <span class='caret'></span></a>" : "{$name} <span class='caret'></span></a>";
+                $mainNav .= "<ul class='dropdown-menu'>";
 
-                foreach($item as $subItem){
-                    $mainNav .= "<a class='dropdown-item' href='{$subItem['url']}'>{$subItem['text']}</a>";
+                foreach ($item as $subItem) {
+                    if($subItem === 'divider') {
+                        $mainNav .= "<li role='separator' class='divider'></li>";
+                    } else{
+                        $mainNav .= "<li><a href='{$subItem['url']}'>";
+                        $mainNav .= ($subItem['icon'] !== '') ? "<i class='fa fa-{$subItem['icon']}'></i> {$subItem['text']}" : "{$subItem['text']}";
+                        $mainNav .= "</a></li>";
+                    }
                 }
-                $mainNav .= "</div></li>";
-            } else {
-                $mainNav .= "<li class='nav-item'>";
-                $mainNav .= "<a class='nav-link' href='{$item['url']}'>{$item['text']}</a>";
-                $mainNav .= "</li>";
+                $mainNav .= "</ul></li>";
+            }  else {
+                $mainNav .= "<li><a href='{$item['url']}'>";
+                $mainNav .= ($item['icon'] !== '') ? "<i class='fa fa-{$item['icon']}'></i> {$item['text']}" : "{$item['text']}";
+                $mainNav .= "</a></li>";
             }
         }
 
@@ -80,26 +98,23 @@ class BootstrapUI extends Frontend {
         $markUp .= "</ul>";
 
         if($attr['search'] == True){
-            $searchForm .= "<form class='form-inline pull-xs-{$attr['searchAlignment']}' action='{$attr['searchTarget']}'>";
-            $searchForm .= "<input class='form-control' type='search' placeholder='Search'>";
+            $searchForm .= "<form class='navbar-form navbar-{$attr['searchAlignment']}' action='{$attr['searchTarget']}' role='search'>";
+            $searchForm .= "<div class='form-group'><input class='form-control' type='search' placeholder='Search'></div> &nbsp;";
             $searchForm .= "<button class='btn btn-{$attr['searchBtnClass']}' type='submit'>Search</button>";
             $searchForm .= "</form>";
-            $markUp .= $searchForm . "</nav>";
+            $markUp .= $searchForm . "</div></div></nav>";
         } else{
-            $markUp .= "</nav>";
+            $markUp .= "</div></div></nav>";
         }
 
-
-
         return $markUp;
-
     }
 
     public function footer($copyrightText, $navigation = false) {
         // TODO: Implement footer() method.
     }
 
-    public function table($numRows, $numCols, $class) {
-        // TODO: Implement table() method.
-    }
+//    public function table($cols, $class) {
+//        $markup = "<table class='table {$class}'>";
+//    }
 }

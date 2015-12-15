@@ -12,7 +12,8 @@ class View {
     private $_viewConfig = [];
     private $_loader;
     private $_twig;
-    public $templateData = [];
+    private $_frontend;
+    public $templateData = array("baseUrl" => BASE_URL);
 
 
     /**
@@ -20,13 +21,16 @@ class View {
      */
     public function __construct() {
         Session::init();
-        
-        //require_once('../config.php');
         $this->_viewConfig = unserialize(TEMPLATES);
         
         if(isset($this->_viewConfig['templateDir'])){
             $this->_loader = new Twig_Loader_Filesystem($this->_viewConfig['templateDir']);
-            $this->_twig = new Twig_Environment($this->_loader, array('cache' => $this->_viewConfig['cacheDir']));
+            $this->_twig = new Twig_Environment($this->_loader, array(
+                'cache' => $this->_viewConfig['cacheDir'],
+                'debug' => true,
+                'autoescape' => false,
+                'auto_reload' => true
+            ));
         } else {
             die("Please set the path to your templates");
         }
@@ -52,6 +56,23 @@ class View {
             die("Template does not exist. TemplateDir = {$this->_viewConfig['templateDir']}{$templateFile}");
         }
         
-        $this->templateData = [];
+        $this->templateData = array("baseUrl" => BASE_URL);
+    }
+
+    /**
+     * @param $type
+     * @return BootstrapUI
+     */
+    public function frontend($type) {
+        if($type === 'bootstrap'){
+            $this->_frontend = new BootstrapUI();
+        } elseif($type === 'jquery'){
+            die('Has not set it yet');
+        } else{
+            $class = ucfirst($type) . "UI";
+            $this->_frontend = new $class();
+        }
+
+        return $this->_frontend;
     }
 }

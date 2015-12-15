@@ -18,7 +18,6 @@ abstract class Frontend {
     abstract public function __construct();
 
     /**
-     * @param $color
      * @param array $items
      * @param array $attr
      * @return mixed
@@ -26,7 +25,7 @@ abstract class Frontend {
      * @internal param bool|false|string $brandName
      * @internal param bool $searchBar
      */
-    abstract public function navigation($color, $items = array(), $attr = array());
+    abstract public function navigation($items = array(), $attr = array());
 
     /**
      * @param $copyrightText
@@ -40,13 +39,12 @@ abstract class Frontend {
      */
     # abstract public function carousel();
 
-    /**
-     * @param $numRows
-     * @param $numCols
-     * @param $class
-     * @return mixed
-     */
-    abstract public function table($numRows, $numCols, $class);
+//    /**
+//     * @param $cols
+//     * @param $class
+//     * @return mixed
+//     */
+//    abstract public function table($cols, $class, $data);
 
     /**
      * @return mixed

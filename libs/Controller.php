@@ -7,7 +7,6 @@
  * @license     MIT LICENSE (https://opensource.org/licenses/MIT)
  *              Refer to the LICENSE file distributed within the package.
  *
- * 
  */
 class Controller {
     private $_errorMessage = null;
@@ -16,7 +15,7 @@ class Controller {
     private $_navAttrs = array(
         'fixed' => 'top',
         'contrast' => 'light',
-        'brandName' => array('name' => 'DoItYourself', 'url' => '../home/index'),
+        'brandName' => 'DoItYourself',
         'centerContent' => False,
         'alignment' => 'left',
         'search' => False,
@@ -94,13 +93,6 @@ class Controller {
     }
 
     /**
-     * @param array $navAttrs
-     */
-    public function setNavAttrs($navAttrs) {
-        $this->_navAttrs = $navAttrs;
-    }
-
-    /**
      * @param $key
      * @param array $value
      */
@@ -111,8 +103,44 @@ class Controller {
             if(DUtil::array_keys_exists($value, array('text', 'url', 'icon')) === True){
                 $this->_menuItems[$key] = $value;
             } else {
-                die();
+                die('Please make sure the menu item array has keys text, url and icon');
+            }
+        } else {
+            die('Menu item already exists!!!');
+        }
+    }
+
+    /**
+     * @param $attr
+     * @param $value
+     */
+    public function setNavAttr($attr, $value){
+        if(array_key_exists($attr, $this->_navAttrs) === True) {
+            $this->_navAttrs[$attr] = $value;
+        } else {
+            die("{$attr} is not an option for the navigation menu");
+        }
+    }
+
+    /**
+     * @param array $navAttrs
+     */
+    public function setNavAttrs($navAttrs = array()) {
+        $msg = "";
+        foreach($navAttrs as $attr => $value){
+            if(array_key_exists($attr, $this->_navAttrs) === True) {
+                $this->_navAttrs[$attr] = $value;
+            } else {
+                $msg .= "{$attr} is not an option for the navigation menu\n";
             }
         }
+
+        if($msg !== "") {
+            die($msg);
+        }
+    }
+
+    public function addSubMenu($key, $subMenu = array()) {
+
     }
 }

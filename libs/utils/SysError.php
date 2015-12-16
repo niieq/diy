@@ -1,10 +1,6 @@
 <?php
 
 class SysError {
-
-    /*
-     User Errors...
-    */
     public static function user($msg, $username) {
         $date = date('d.m.Y h:i:s');
         $log = $msg."   |  Date:  ".$date."  |  User:  ".$username."\n";
@@ -13,11 +9,8 @@ class SysError {
             error_log($log, 1, ADMIN, "Subject: Check the errors\nFrom: Rizzlas@my.domain\n");
         }
     }
-    /*
-   General Errors...
-  */
-    public static function general($msg)
-    {
+
+    public static function general($msg) {
         $date = date('d.m.Y h:i:s');
         $log = $msg."   |  Date:  ".$date."\n";
         if(DEBUG === True){

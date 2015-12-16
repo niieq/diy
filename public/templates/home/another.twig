@@ -1,8 +1,30 @@
-<html>
-    <head>
-        <title>Another page for testing</title>
-    </head>
-    <body>
-        This is just another human being called {{ name }}.
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Hello world</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ base_url }}{{ bootstrapCSS.bts }}">
+    <link rel="stylesheet" href="{{ base_url }}{{ bootstrapCSS.fonts }}">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 60px;">
+            {{ nav }}
+        </div>
+
+        <div class="col-md-12">
+            This is just another human being called {{ name }}.
+        </div>
+    </div>
+</div>
+
+<script src="{{ base_url }}{{ bootstrapJS.jQuery }}"></script>
+<script src="{{ base_url }}{{ bootstrapJS.bts }}"></script>
+</body>
 </html>

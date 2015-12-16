@@ -49,7 +49,7 @@ class BootstrapUI extends Frontend {
      *              'centerContent' => True | False
      *          )
      */
-    public function navigation($items = array(), $attr = array()) {
+    public function navigation($items = array(), $attr = array('fixed' => 'top', 'contrast' => 'light', 'brandName' => 'DoItYourself', 'centerContent' => False, 'alignment' => 'left', 'search' => False, 'searchAlignment' => 'right', 'searchTarget' => '#', 'searchBtnClass' => 'default', 'logoPath' => '')) {
         $mainNav = "";
         $navCollapsible = "";
         $searchForm = "";
@@ -60,8 +60,8 @@ class BootstrapUI extends Frontend {
         $navCollapsible .= ($attr['centerContent'] === True) ? "<div class='container'><div class='navbar-header'>" : "<div class='container-fluid'><div class='navbar-header'>";
         $navCollapsible .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#navContent' aria-expanded='false'>";
         $navCollapsible .= "<span class='sr-only'>Toggle navigation</span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span></button>";
-        $navCollapsible .= (count($attr['brandName']) !== 0) ? "<a class='navbar-brand' href='{$attr['brandName']['url']}'>{$attr['brandName']['name']}</a></div>" :
-            "<a class='navbar-brand' href='/'><img src='{$attr['logoPath']}'></a></div>";
+        $navCollapsible .= (count($attr['brandName']) !== 0) ? "<a class='navbar-brand' href='" . BASE_URL . "'>{$attr['brandName']}</a></div>" :
+            "<a class='navbar-brand' href='" . BASE_URL . "'><img src='{$attr['logoPath']}'></a></div>";
 
         $markUp .= $navCollapsible;
         $markUp .= "<div class='collapse navbar-collapse' id='navContent'>";
@@ -82,14 +82,14 @@ class BootstrapUI extends Frontend {
                         if ($subItem === 'divider') {
                             $mainNav .= "<li role='separator' class='divider'></li>";
                         } else {
-                            $mainNav .= "<li><a href='{$subItem['url']}'>";
+                            $mainNav .= "<li><a href='" . BASE_URL . "{$subItem['url']}'>";
                             $mainNav .= ($subItem['icon'] !== '') ? "<i class='fa fa-{$subItem['icon']}'></i> {$subItem['text']}" : "{$subItem['text']}";
                             $mainNav .= "</a></li>";
                         }
                     }
                     $mainNav .= "</ul></li>";
                 } else {
-                    $mainNav .= "<li><a href='{$item['url']}'>";
+                    $mainNav .= "<li><a href='" . BASE_URL . "{$item['url']}'>";
                     $mainNav .= ($item['icon'] !== '') ? "<i class='fa fa-{$item['icon']}'></i> {$item['text']}" : "{$item['text']}";
                     $mainNav .= "</a></li>";
                 }
@@ -101,7 +101,7 @@ class BootstrapUI extends Frontend {
         $markUp .= "</ul>";
 
         if($attr['search'] == True){
-            $searchForm .= "<form class='navbar-form navbar-{$attr['searchAlignment']}' action='{$attr['searchTarget']}' role='search'>";
+            $searchForm .= "<form class='navbar-form navbar-{$attr['searchAlignment']}' action='" . BASE_URL . "{$attr['searchTarget']}' role='search'>";
             $searchForm .= "<div class='form-group'><input class='form-control' type='search' placeholder='Search'></div> &nbsp;";
             $searchForm .= "<button class='btn btn-{$attr['searchBtnClass']}' type='submit'>Search</button>";
             $searchForm .= "</form>";

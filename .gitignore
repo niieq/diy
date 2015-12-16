@@ -1,9 +1,9 @@
 public/cache/*
 config.php
 vendor
-app/*
-releases/
 .directory
 .idea/*
-public/templates/*/*
+public/templates/*
+!public/templates/home/
+!.gitkeep
 

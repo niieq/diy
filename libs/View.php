@@ -13,7 +13,8 @@ class View {
     private $_loader;
     private $_twig;
     private $_frontend;
-    public $templateData = array("baseUrl" => BASE_URL);
+    private $_customUIPath = null;
+    public $templateData = [];
 
 
     /**
@@ -27,8 +28,8 @@ class View {
             $this->_loader = new Twig_Loader_Filesystem($this->_viewConfig['templateDir']);
             $this->_twig = new Twig_Environment($this->_loader, array(
                 'cache' => $this->_viewConfig['cacheDir'],
-                'debug' => true,
-                'autoescape' => false,
+                'debug' => $this->_viewConfig['debug'],
+                'autoescape' => $this->_viewConfig['autoescape'],
                 'auto_reload' => true
             ));
         } else {
@@ -56,7 +57,7 @@ class View {
             die("Template does not exist. TemplateDir = {$this->_viewConfig['templateDir']}{$templateFile}");
         }
         
-        $this->templateData = array("baseUrl" => BASE_URL);
+        $this->templateData = [];
     }
 
     /**
@@ -68,11 +69,29 @@ class View {
             $this->_frontend = new BootstrapUI();
         } elseif($type === 'jquery'){
             die('Has not set it yet');
-        } else{
+        } else {
+            $this->setCustomUIPath(CUSTOM_UI_PATH);
+            if (file_exists($this->getCustomUIPath())) {
+                require_once $this->getCustomUIPath();
+            }
             $class = ucfirst($type) . "UI";
             $this->_frontend = new $class();
         }
 
         return $this->_frontend;
+    }
+
+    /**
+     * @return null
+     */
+    public function getCustomUIPath() {
+        return $this->_customUIPath;
+    }
+
+    /**
+     * @param null $customUIPath
+     */
+    public function setCustomUIPath($customUIPath) {
+        $this->_customUIPath = $customUIPath;
     }
 }

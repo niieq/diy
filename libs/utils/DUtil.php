@@ -141,4 +141,17 @@ class DUtil {
             return json_encode($data);
         }
     }
+
+    /**
+     * @param array $array
+     * @param array $keys
+     * @return bool
+     */
+    public static function array_keys_exists($array, $keys) {
+        if(count(array_intersect_key(array_flip($keys), $array)) === count($keys)){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

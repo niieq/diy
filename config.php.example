@@ -1,5 +1,7 @@
 <?php
 
+    error_reporting(-1);
+
     //  All configurations can be found in here.
     // Database constants
     define('DB_TYPE', 'mysql');

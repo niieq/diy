@@ -12,6 +12,19 @@
 class Controller {
     private $_errorMessage = null;
     private $_successMessage = null;
+    private $_menuItems = array();
+    private $_navAttrs = array(
+        'fixed' => 'top',
+        'contrast' => 'light',
+        'brandName' => array('name' => 'DoItYourself', 'url' => '../home/index'),
+        'centerContent' => False,
+        'alignment' => 'left',
+        'search' => False,
+        'searchAlignment' => 'right',
+        'searchTarget' => '#',
+        'searchBtnClass' => 'default',
+        'logoPath' => ''
+    );
 
     /**
      * Controller constructor.
@@ -21,6 +34,10 @@ class Controller {
         $this->view = new View(); //Controls view processes ...
         $this->formData = new Form(); //Controls form data passing ...
         $this->view->dexport('base_url', BASE_URL);
+        $this->frontend = $this->view->frontend(FRONTEND_UI);
+        $this->view->dexport('nav', $this->frontend->navigation($this->_menuItems, $this->_navAttrs));
+        $this->view->dexport('bootstrapCSS', $this->frontend->getPathToStatics()['css']);
+        $this->view->dexport('bootstrapJS', $this->frontend->getPathToStatics()['js']);
     }
 
     /**
@@ -74,5 +91,28 @@ class Controller {
      */
     public function fetchSuccessMessage(){
         return apc_fetch('successMessage');
+    }
+
+    /**
+     * @param array $navAttrs
+     */
+    public function setNavAttrs($navAttrs) {
+        $this->_navAttrs = $navAttrs;
+    }
+
+    /**
+     * @param $key
+     * @param array $value
+     */
+    public function addMenuItem($key, $value = array()) {
+        # Check whether a menu key already exists
+        if(array_key_exists($key, $this->_menuItems) !== True){
+            # Check whether the values given has keys text, url and icon
+            if(DUtil::array_keys_exists($value, array('text', 'url', 'icon')) === True){
+                $this->_menuItems[$key] = $value;
+            } else {
+                die();
+            }
+        }
     }
 }

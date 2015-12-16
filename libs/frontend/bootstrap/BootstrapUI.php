@@ -67,34 +67,37 @@ class BootstrapUI extends Frontend {
         $markUp .= "<div class='collapse navbar-collapse' id='navContent'>";
         $markUp .= "<ul class='nav navbar-nav navbar-{$attr['alignment']}'>";
 
-        foreach($items as $key => $item){
-            if(DUtil::is_multiArray($item) === True) {
-                $elements = explode('/', $key);
-                $name = ucfirst($elements[0]);
-                $icon = (count($elements) > 1) ? $elements[1] : '';
-                $mainNav .= "<li class='dropdown'>";
-                $mainNav .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#' role='button' aria-haspopup='true' aria-expanded='false'>";
-                $mainNav .= ($icon !== '') ? "<i class='fa fa-{$icon}'></i> {$name} <span class='caret'></span></a>" : "{$name} <span class='caret'></span></a>";
-                $mainNav .= "<ul class='dropdown-menu'>";
+        if(count($items) > 0) {
+            foreach ($items as $key => $item) {
+                if (DUtil::is_multiArray($item) === True) {
+                    $elements = explode('/', $key);
+                    $name = ucfirst($elements[0]);
+                    $icon = (count($elements) > 1) ? $elements[1] : '';
+                    $mainNav .= "<li class='dropdown'>";
+                    $mainNav .= "<a class='dropdown-toggle' data-toggle='dropdown' href='#' role='button' aria-haspopup='true' aria-expanded='false'>";
+                    $mainNav .= ($icon !== '') ? "<i class='fa fa-{$icon}'></i> {$name} <span class='caret'></span></a>" : "{$name} <span class='caret'></span></a>";
+                    $mainNav .= "<ul class='dropdown-menu'>";
 
-                foreach ($item as $subItem) {
-                    if($subItem === 'divider') {
-                        $mainNav .= "<li role='separator' class='divider'></li>";
-                    } else{
-                        $mainNav .= "<li><a href='{$subItem['url']}'>";
-                        $mainNav .= ($subItem['icon'] !== '') ? "<i class='fa fa-{$subItem['icon']}'></i> {$subItem['text']}" : "{$subItem['text']}";
-                        $mainNav .= "</a></li>";
+                    foreach ($item as $subItem) {
+                        if ($subItem === 'divider') {
+                            $mainNav .= "<li role='separator' class='divider'></li>";
+                        } else {
+                            $mainNav .= "<li><a href='{$subItem['url']}'>";
+                            $mainNav .= ($subItem['icon'] !== '') ? "<i class='fa fa-{$subItem['icon']}'></i> {$subItem['text']}" : "{$subItem['text']}";
+                            $mainNav .= "</a></li>";
+                        }
                     }
+                    $mainNav .= "</ul></li>";
+                } else {
+                    $mainNav .= "<li><a href='{$item['url']}'>";
+                    $mainNav .= ($item['icon'] !== '') ? "<i class='fa fa-{$item['icon']}'></i> {$item['text']}" : "{$item['text']}";
+                    $mainNav .= "</a></li>";
                 }
-                $mainNav .= "</ul></li>";
-            }  else {
-                $mainNav .= "<li><a href='{$item['url']}'>";
-                $mainNav .= ($item['icon'] !== '') ? "<i class='fa fa-{$item['icon']}'></i> {$item['text']}" : "{$item['text']}";
-                $mainNav .= "</a></li>";
             }
+
+            $markUp .= $mainNav;
         }
 
-        $markUp .= $mainNav;
         $markUp .= "</ul>";
 
         if($attr['search'] == True){

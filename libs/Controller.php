@@ -110,6 +110,24 @@ class Controller {
         }
     }
 
+    public function addSubMenu($mainKey, $key, $subMenu = array()) {
+        # Check whether a menu key already exists
+        if(array_key_exists(explode('/', $mainKey)[0], $this->_menuItems) !== True || array_key_exists($mainKey, $this->_menuItems) !== True ) {
+            $this->_menuItems[$mainKey] = array();
+            if(array_key_exists($key, $this->_menuItems[$mainKey]) !== True) {
+                if(DUtil::array_keys_exists($subMenu, array('text', 'url', 'icon')) === True) {
+                    $this->_menuItems[$mainKey][$key] = $subMenu;
+                } else {
+                    die('Please make sure the menu item array has keys text, url and icon');
+                }
+            } else {
+                die('Menu item already exists!!!');
+            }
+        } else {
+            die('Menu item already exists!!!');
+        }
+    }
+
     /**
      * @param $attr
      * @param $value
@@ -138,9 +156,5 @@ class Controller {
         if($msg !== "") {
             die($msg);
         }
-    }
-
-    public function addSubMenu($key, $subMenu = array()) {
-
     }
 }

@@ -31,7 +31,7 @@ class BootstrapUI extends Frontend {
      * @example $items = array(
      *              'home' => array('text' => 'Home', 'url' => 'home.php'),
      *              'profile' => array(
-                        'changePasswd' => array('text' => 'Change Password', 'url' => 'change_password.php'),
+     *                   'changePasswd' => array('text' => 'Change Password', 'url' => 'change_password.php'),
      *                  'logout' => array('text' => 'Sign out', 'url' => 'logout.php')
      *              )
      *          )

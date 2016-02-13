@@ -6,4 +6,4 @@ vendor
 public/templates/*
 !public/templates/home/
 !.gitkeep
-
+.env

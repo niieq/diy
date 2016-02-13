@@ -8,9 +8,9 @@
  *
  */
 
+require_once 'vendor/autoload.php';
 require_once 'config.php';
 require_once 'libs/Autoload.php';
-require_once 'vendor/autoload.php';
 
 new Autoload('libs/');
 $appConfig = unserialize(APP_CONFIG);

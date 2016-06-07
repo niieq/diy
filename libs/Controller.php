@@ -10,7 +10,7 @@
  */
 class Controller {
     private $_message = null;
-    public $title = "SurveyBlob";
+    public $title = "DIY Framework";
 
     /**
      * Controller constructor.

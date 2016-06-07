@@ -154,4 +154,14 @@ class DUtil {
             return false;
         }
     }
+
+    /**
+     * redirect - Shortcut for a page redirect
+     *
+     * @param string $url
+     */
+    public static function redirect($url) {
+        header("Location: $url");
+        exit(0);
+    }
 }

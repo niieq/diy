@@ -83,7 +83,7 @@ class Validate {
      * @return string For an error
      */
     public function exactlength($value, $param) {
-        if (strlen($value) != $param) {
+        if (strlen($value) !== $param) {
             return "must be exactly $param in length";
         }
     }
@@ -139,7 +139,7 @@ class Validate {
      * @return string For an error
      */
     public function eq($value, $param) {
-        if ($value != $param) {
+        if ($value !== $param) {
             return "does not match";
         }
     }

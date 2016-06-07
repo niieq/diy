@@ -19,7 +19,7 @@ $app = new Bootstrap();
 $app->setBasePath($appConfig['baseDir']);
 
 if($appConfig['baseDir'] === '' || empty($appConfig['baseDir'])){
-    die('You need to point baseDir to a valid path in your config file.');    
+    die('You need to point baseDir to a valid path in your config file.');
 }
 
 $app->setControllerPath($appConfig['controllersDir']);

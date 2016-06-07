@@ -1,0 +1,7 @@
+public/cache/*
+vendor
+.directory
+.idea/*
+public/templates/*
+!public/templates/home/
+!.gitkeep

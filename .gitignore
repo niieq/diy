@@ -5,3 +5,5 @@ vendor
 public/templates/*
 !public/templates/home/
 !.gitkeep
+diy.sublime-project
+diy.sublime-workspace

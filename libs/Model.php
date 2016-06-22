@@ -15,7 +15,7 @@ class Model {
      * Model constructor.
      */
     public function __construct() {
-        $this->_dbconfig = unserialize(DATABASE);
+        $this->_dbConfig = unserialize(DATABASE);
         $this->dbase = new Database($this->_dbConfig);
     }
 

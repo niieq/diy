@@ -26,4 +26,5 @@ $app->setControllerPath($appConfig['controllersDir']);
 $app->setModelPath($appConfig['modelsDir']);
 $app->setDefaultController($appConfig['defaultController']);
 $app->setDefaultMethod($appConfig['defaultMethod']);
+$app->setIfDefaultModel(false);
 $app->init();

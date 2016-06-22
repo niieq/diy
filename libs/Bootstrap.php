@@ -18,6 +18,7 @@ class Bootstrap {
     private $_modelPath = 'model/';
     private $_defaultMethod = 'index';
     private $_defaultController = 'home';
+    private $_allowModelOnDefault = false;
 
     /**
      *
@@ -33,6 +34,11 @@ class Bootstrap {
     private function _loadDefaultController(){
         require_once trim($this->_basePath . $this->_controllerPath . $this->_defaultController . '.php', '/');
         $this->_controller = new $this->_defaultController();
+
+        if($this->_allowModelOnDefault){
+            $this->_controller->loadModel($this->_defaultController, $this->_basePath . $this->_modelPath);
+        }
+
         $this->_controller->{$this->_defaultMethod}();
     }
 
@@ -148,5 +154,12 @@ class Bootstrap {
      */
     public function setDefaultMethod($method_name){
         $this->_defaultMethod = trim($method_name, '/');
+    }
+
+    /**
+     * @param bool $value
+     */
+    public function setIfDefaultModel($value){
+        (is_bool($value) === true) ? $this->_allowModelOnDefault = $value : die(__FUNCTION__ . ": accepts only boolean values");
     }
 }

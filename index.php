@@ -26,5 +26,5 @@ $app->setControllerPath($appConfig['controllersDir']);
 $app->setModelPath($appConfig['modelsDir']);
 $app->setDefaultController($appConfig['defaultController']);
 $app->setDefaultMethod($appConfig['defaultMethod']);
-$app->setIfDefaultModel({{cookiecutter.default_controller_has_model}});
+$app->setIfDefaultModel({{ cookiecutter.default_controller_has_model }});
 $app->init();

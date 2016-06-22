@@ -5,7 +5,13 @@
     "default_controller": "{{ cookiecutter.default_controller|lower|replace(' ', '_') }}",
     "default_method": "{{ cookiecutter.default_method|lower|replace(' ', '_') }}",
     "default_controller_has_model": false,
+    "base_url": "",
     "secret_key": "^oXR/HbU:,oRF~^un5:uo_dyo)h-R=Xll5#,Kl_^/Rad-WH/M=",
-    "database_url": "",
+    "database_type": "mysql",
+    "database_user": "root",
+    "database_password": "Password to database: ",
+    "database_host": "localhost",
+    "database_port": "Enter 3306 if using MySQL/MariaDB or 5437 for Postgresql: ",
+    "database_name": "Enter the name of the database: ",
     "messages_storage": ["session", "apc"]
 }

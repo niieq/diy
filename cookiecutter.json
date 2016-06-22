@@ -1,0 +1,11 @@
+{
+    "base_directory": "{{ cookiecutter.base_directory|lower|replace(' ', '_') }}",
+    "controllers_directory": "{{ cookiecutter.controllers_directory|lower|replace(' ', '_') }}",
+    "models_directory": "{{ cookiecutter.models_directory|lower|replace(' ', '_') }}",
+    "default_controller": "{{ cookiecutter.default_controller|lower|replace(' ', '_') }}",
+    "default_method": "{{ cookiecutter.default_method|lower|replace(' ', '_') }}",
+    "default_controller_has_model": false,
+    "secret_key": "^oXR/HbU:,oRF~^un5:uo_dyo)h-R=Xll5#,Kl_^/Rad-WH/M=",
+    "database_url": "",
+    "messages_storage": ["session", "apc"]
+}

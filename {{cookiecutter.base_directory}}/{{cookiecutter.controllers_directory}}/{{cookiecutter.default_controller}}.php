@@ -5,7 +5,7 @@ class Home extends Controller {
         parent::__construct();
     }
 
-    public function index() {
+    public function {{cookiecutter.default_method}}() {
         $this->view->dexport("message", "It works");
         $this->view->render('home/index');
     }

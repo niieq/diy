@@ -12,11 +12,11 @@
     define('APP_CONFIG',
         serialize(
             array(
-                'baseDir' => 'app/', # This can be anything. It should contain the controller and model folders ...
-                'controllersDir' => 'controllers/',
-                'modelsDir' => 'models/',
-                'defaultController' => 'home',
-                'defaultMethod' => 'index'
+                'baseDir' => '{{cookiecutter.base_directory}}/', # This can be anything. It should contain the controller and model folders ...
+                'controllersDir' => '{{cookiecutter.controllers_directory}}/',
+                'modelsDir' => '{{cookiecutter.models_directory}}/',
+                'defaultController' => '{{cookiecutter.default_controller}}',
+                'defaultMethod' => '{{cookiecutter.default_method}}'
             )
         )
     );
@@ -47,7 +47,7 @@
         )
     );
 
-    define('MSG_STORAGE', "session");
+    define('MSG_STORAGE', "{{cookiecutter.messages_storage}}");
 
     # Secret key. Make sure you don't change this key whilst in production ....
     # Used mostly for hashing ...
@@ -55,4 +55,4 @@
     define('SECRET_KEY', getenv('SECRET_KEY'));
 
     # Paths. Make sure you put a trailing slash(/) infront of all your paths!!!
-    define('BASE_URL', 'http://localhost/~nene/diy/');
+    define('BASE_URL', '{{cookiecutter.base_url}}');

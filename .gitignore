@@ -7,3 +7,5 @@ public/templates/*
 !.gitkeep
 diy.sublime-project
 diy.sublime-workspace
+tags
+.editor-config

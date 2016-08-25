@@ -1,6 +1,11 @@
 {
     "require": {
         "twig/twig": "~1.0",
-        "vlucas/phpdotenv": "^2.2"
+        "vlucas/phpdotenv": "^2.2",
+        "propel/propel": "~2.0@dev",
+        "monolog/monolog": "^1.21"
+    },
+    "autoload": {
+        "classmap": ["libs/sqlobjects/generated-classes/"]
     }
 }

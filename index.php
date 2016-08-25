@@ -9,10 +9,20 @@
  */
 
 require_once 'vendor/autoload.php';
-require_once 'config.php';
+require_once 'conf/config.php';
+require_once 'libs/sqlobjects/generated-conf/config.php';
 require_once 'libs/Autoload.php';
 
-new Autoload('libs/');
+new Autoload('libs/base/');
+
+// use Monolog\Logger;
+// use Monolog\Handler\StreamHandler;
+
+// $defaultLogger = new Logger('defaultLogger');
+// $defaultLogger->pushHandler(new StreamHandler('/var/log/propel.log', Logger::WARNING));
+
+// $serviceContainer->setLogger('defaultLogger', $defaultLogger);
+
 $appConfig = unserialize(APP_CONFIG);
 
 $app = new Bootstrap();

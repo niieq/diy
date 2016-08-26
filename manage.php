@@ -1,5 +1,10 @@
 <?php
 
+    require_once 'vendor/autoload.php';
+    require_once 'libs/sqlobjects/generated-conf/config.php';
+    require_once 'libs/Autoload.php';
+    new Autoload('libs/base/');
+
     if(!isset($argv[1])) $argv[1] = "";
 
     switch($argv[1]){
@@ -24,10 +29,19 @@
         case "convert_config":
             echo shell_exec("vendor/bin/propel config:convert");
             break;
+        case "createsuperuser":
+            echo "Username: ";
+            $username = DUtil::read_stdin();
+            echo "Email: ";
+            $email = DUtil::read_stdin();
+            echo "Password: ";
+            $password = DUtil::read_stdin();
+            Authentication::create_superuser($username, $email, $password);
+            break;
         case "help":
             echo "\n*********************************\n\n";
             echo "The commands to pass are below: \n";
-            echo "\n\tmodel_build\n\tsql_build [--overwrite]\n\thelp\n\tconvert_config\n\tsql_insert\n";
+            echo "\n\tmodel_build\n\tsql_build [--overwrite]\n\thelp\n\tconvert_config\n\tsql_insert\ncreatesuperuser\n";
             echo "\n*********************************\n\n";
             break;
         default:

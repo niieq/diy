@@ -19,6 +19,17 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
+use Symfony\Component\Translation\IdentityTranslator;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Context\ExecutionContextFactory;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Mapping\Factory\LazyLoadingMetadataFactory;
+use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use Symfony\Component\Validator\Validator\RecursiveValidator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Base class that represents a row from the 'users' table.
@@ -106,16 +117,16 @@ abstract class User implements ActiveRecordInterface
     /**
      * The value for the is_staff field.
      *
-     * Note: this column has a database default value of: 1
-     * @var        int
+     * Note: this column has a database default value of: true
+     * @var        boolean
      */
     protected $is_staff;
 
     /**
      * The value for the is_superuser field.
      *
-     * Note: this column has a database default value of: 0
-     * @var        int
+     * Note: this column has a database default value of: false
+     * @var        boolean
      */
     protected $is_superuser;
 
@@ -143,6 +154,23 @@ abstract class User implements ActiveRecordInterface
      */
     protected $alreadyInSave = false;
 
+    // validate behavior
+
+    /**
+     * Flag to prevent endless validation loop, if this object is referenced
+     * by another object which falls in this transaction.
+     * @var        boolean
+     */
+    protected $alreadyInValidation = false;
+
+    /**
+     * ConstraintViolationList object
+     *
+     * @see     http://api.symfony.com/2.0/Symfony/Component/Validator/ConstraintViolationList.html
+     * @var     ConstraintViolationList
+     */
+    protected $validationFailures;
+
     /**
      * Applies default values to this object.
      * This method should be called from the object's constructor (or
@@ -151,8 +179,8 @@ abstract class User implements ActiveRecordInterface
      */
     public function applyDefaultValues()
     {
-        $this->is_staff = 1;
-        $this->is_superuser = 0;
+        $this->is_staff = true;
+        $this->is_superuser = false;
     }
 
     /**
@@ -445,7 +473,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * Get the [is_staff] column value.
      *
-     * @return int
+     * @return boolean
      */
     public function getIsStaff()
     {
@@ -453,13 +481,33 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [is_staff] column value.
+     *
+     * @return boolean
+     */
+    public function isStaff()
+    {
+        return $this->getIsStaff();
+    }
+
+    /**
      * Get the [is_superuser] column value.
      *
-     * @return int
+     * @return boolean
      */
     public function getIsSuperuser()
     {
         return $this->is_superuser;
+    }
+
+    /**
+     * Get the [is_superuser] column value.
+     *
+     * @return boolean
+     */
+    public function isSuperuser()
+    {
+        return $this->getIsSuperuser();
     }
 
     /**
@@ -623,15 +671,23 @@ abstract class User implements ActiveRecordInterface
     } // setPassword()
 
     /**
-     * Set the value of [is_staff] column.
+     * Sets the value of the [is_staff] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      *
-     * @param int $v new value
+     * @param  boolean|integer|string $v The new value
      * @return $this|\User The current object (for fluent API support)
      */
     public function setIsStaff($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
         }
 
         if ($this->is_staff !== $v) {
@@ -643,15 +699,23 @@ abstract class User implements ActiveRecordInterface
     } // setIsStaff()
 
     /**
-     * Set the value of [is_superuser] column.
+     * Sets the value of the [is_superuser] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      *
-     * @param int $v new value
+     * @param  boolean|integer|string $v The new value
      * @return $this|\User The current object (for fluent API support)
      */
     public function setIsSuperuser($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
         }
 
         if ($this->is_superuser !== $v) {
@@ -712,11 +776,11 @@ abstract class User implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->is_staff !== 1) {
+            if ($this->is_staff !== true) {
                 return false;
             }
 
-            if ($this->is_superuser !== 0) {
+            if ($this->is_superuser !== false) {
                 return false;
             }
 
@@ -765,10 +829,10 @@ abstract class User implements ActiveRecordInterface
             $this->password = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('IsStaff', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->is_staff = (null !== $col) ? (int) $col : null;
+            $this->is_staff = (null !== $col) ? (boolean) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('IsSuperuser', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->is_superuser = (null !== $col) ? (int) $col : null;
+            $this->is_superuser = (null !== $col) ? (boolean) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
@@ -1046,10 +1110,10 @@ abstract class User implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->password, PDO::PARAM_STR);
                         break;
                     case 'is_staff':
-                        $stmt->bindValue($identifier, $this->is_staff, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, (int) $this->is_staff, PDO::PARAM_INT);
                         break;
                     case 'is_superuser':
-                        $stmt->bindValue($identifier, $this->is_superuser, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, (int) $this->is_superuser, PDO::PARAM_INT);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -1563,6 +1627,73 @@ abstract class User implements ActiveRecordInterface
     public function __toString()
     {
         return (string) $this->exportTo(UserTableMap::DEFAULT_STRING_FORMAT);
+    }
+
+    // validate behavior
+
+    /**
+     * Configure validators constraints. The Validator object uses this method
+     * to perform object validation.
+     *
+     * @param ClassMetadata $metadata
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('email', new Email());
+        $metadata->addPropertyConstraint('first_name', new Length(array ('max' => 50,)));
+        $metadata->addPropertyConstraint('last_name', new Length(array ('max' => 100,)));
+        $metadata->addPropertyConstraint('user_name', new Length(array ('max' => 50,)));
+    }
+
+    /**
+     * Validates the object and all objects related to this table.
+     *
+     * @see        getValidationFailures()
+     * @param      ValidatorInterface|null $validator A Validator class instance
+     * @return     boolean Whether all objects pass validation.
+     */
+    public function validate(ValidatorInterface $validator = null)
+    {
+        if (null === $validator) {
+            $validator = new RecursiveValidator(
+                new ExecutionContextFactory(new IdentityTranslator()),
+                new LazyLoadingMetadataFactory(new StaticMethodLoader()),
+                new ConstraintValidatorFactory()
+            );
+        }
+
+        $failureMap = new ConstraintViolationList();
+
+        if (!$this->alreadyInValidation) {
+            $this->alreadyInValidation = true;
+            $retval = null;
+
+
+            $retval = $validator->validate($this);
+            if (count($retval) > 0) {
+                $failureMap->addAll($retval);
+            }
+
+
+            $this->alreadyInValidation = false;
+        }
+
+        $this->validationFailures = $failureMap;
+
+        return (Boolean) (!(count($this->validationFailures) > 0));
+
+    }
+
+    /**
+     * Gets any ConstraintViolation objects that resulted from last call to validate().
+     *
+     *
+     * @return     object ConstraintViolationList
+     * @see        validate()
+     */
+    public function getValidationFailures()
+    {
+        return $this->validationFailures;
     }
 
     /**

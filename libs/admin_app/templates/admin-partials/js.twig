@@ -1,0 +1,13 @@
+<script src="{{ base_url }}public/static/vendor/jquery/dist/jquery.min.js"></script>
+<script src="{{ base_url }}public/static/vendor/jquery-ui/jquery-ui.min.js"></script>
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script src="{{ base_url }}public/static/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="{{ base_url }}public/static/vendor/adminlte-bower/dist/js/app.min.js"></script>
+<script src="{{ base_url }}public/static/vendor/pace/pace.min.js"></script>
+<script src="{{ base_url }}public/static/vendor/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="{{ base_url }}public/static/vendor/fastclick/lib/fastclick.js"></script>
+<script type="text/javascript">
+    $(document).ajaxStart(function() { Pace.restart(); });
+</script>

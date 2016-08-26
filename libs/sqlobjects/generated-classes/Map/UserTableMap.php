@@ -176,9 +176,9 @@ class UserTableMap extends TableMap
         $this->addColumn('last_name', 'LastName', 'VARCHAR', false, 100, null);
         $this->addColumn('user_name', 'UserName', 'VARCHAR', true, 50, null);
         $this->addColumn('email', 'Email', 'VARCHAR', true, 150, null);
-        $this->addColumn('password', 'Password', 'VARCHAR', true, 128, null);
-        $this->addColumn('is_staff', 'IsStaff', 'TINYINT', true, 1, 1);
-        $this->addColumn('is_superuser', 'IsSuperuser', 'TINYINT', true, 1, 0);
+        $this->addColumn('password', 'Password', 'VARCHAR', true, 255, null);
+        $this->addColumn('is_staff', 'IsStaff', 'BOOLEAN', true, 1, true);
+        $this->addColumn('is_superuser', 'IsSuperuser', 'BOOLEAN', true, 1, false);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, 'CURRENT_TIMESTAMP');
         $this->addColumn('modified_at', 'ModifiedAt', 'TIMESTAMP', false, null, 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP');
     } // initialize()
@@ -189,6 +189,19 @@ class UserTableMap extends TableMap
     public function buildRelations()
     {
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'validate' => array('rule1' => array ('column' => 'email','validator' => 'Email',), 'rule2' => array ('column' => 'first_name','validator' => 'Length','options' => array ('max' => 50,),), 'rule3' => array ('column' => 'last_name','validator' => 'Length','options' => array ('max' => 100,),), 'rule4' => array ('column' => 'user_name','validator' => 'Length','options' => array ('max' => 50,),), ),
+        );
+    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.

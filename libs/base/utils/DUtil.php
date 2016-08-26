@@ -164,4 +164,48 @@ class DUtil {
         header("Location: $url");
         exit(0);
     }
+
+    /**
+     * hash_cost - Calculate the cost the server can take when using password_hash function
+     *
+     * @return int
+     */
+    public static function hash_cost(){
+        $timeTarget = 0.05;
+        $cost = 8;
+        do{
+            $cost++;
+            $start = microtime(true);
+            password_hash("diyframeworktest", PASSWORD_BCRYPT, ["cost" => $cost]);
+            $end = microtime(true);
+        } while(($end - $start) < $timeTarget);
+
+        return $cost;
+    }
+
+    /**
+     * read_stdin - Read data from the command line
+     *
+     * @return string
+     */
+    public static function read_stdin() {
+        $fr=fopen("php://stdin","r");   // open our file pointer to read from stdin
+        $input = fgets($fr,255);        // read a maximum of 255 characters
+        $input = rtrim($input);         // trim any trailing spaces.
+        fclose ($fr);                   // close the file handle
+        return $input;                  // return the text entered
+    }
+
+    /**
+     * debug - print array elements nicely in the browser;
+     *
+     * @param array $data
+     *
+     */
+    public static function debug($data = array()){
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+        die();
+    }
 }

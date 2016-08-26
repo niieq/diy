@@ -58,8 +58,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser findOneByUserName(string $user_name) Return the first ChildUser filtered by the user_name column
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
  * @method     ChildUser findOneByPassword(string $password) Return the first ChildUser filtered by the password column
- * @method     ChildUser findOneByIsStaff(int $is_staff) Return the first ChildUser filtered by the is_staff column
- * @method     ChildUser findOneByIsSuperuser(int $is_superuser) Return the first ChildUser filtered by the is_superuser column
+ * @method     ChildUser findOneByIsStaff(boolean $is_staff) Return the first ChildUser filtered by the is_staff column
+ * @method     ChildUser findOneByIsSuperuser(boolean $is_superuser) Return the first ChildUser filtered by the is_superuser column
  * @method     ChildUser findOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column
  * @method     ChildUser findOneByModifiedAt(string $modified_at) Return the first ChildUser filtered by the modified_at column *
 
@@ -72,8 +72,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser requireOneByUserName(string $user_name) Return the first ChildUser filtered by the user_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByPassword(string $password) Return the first ChildUser filtered by the password column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUser requireOneByIsStaff(int $is_staff) Return the first ChildUser filtered by the is_staff column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUser requireOneByIsSuperuser(int $is_superuser) Return the first ChildUser filtered by the is_superuser column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByIsStaff(boolean $is_staff) Return the first ChildUser filtered by the is_staff column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByIsSuperuser(boolean $is_superuser) Return the first ChildUser filtered by the is_superuser column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByCreatedAt(string $created_at) Return the first ChildUser filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByModifiedAt(string $modified_at) Return the first ChildUser filtered by the modified_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -84,8 +84,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection findByUserName(string $user_name) Return ChildUser objects filtered by the user_name column
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
  * @method     ChildUser[]|ObjectCollection findByPassword(string $password) Return ChildUser objects filtered by the password column
- * @method     ChildUser[]|ObjectCollection findByIsStaff(int $is_staff) Return ChildUser objects filtered by the is_staff column
- * @method     ChildUser[]|ObjectCollection findByIsSuperuser(int $is_superuser) Return ChildUser objects filtered by the is_superuser column
+ * @method     ChildUser[]|ObjectCollection findByIsStaff(boolean $is_staff) Return ChildUser objects filtered by the is_staff column
+ * @method     ChildUser[]|ObjectCollection findByIsSuperuser(boolean $is_superuser) Return ChildUser objects filtered by the is_superuser column
  * @method     ChildUser[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUser objects filtered by the created_at column
  * @method     ChildUser[]|ObjectCollection findByModifiedAt(string $modified_at) Return ChildUser objects filtered by the modified_at column
  * @method     ChildUser[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -452,37 +452,23 @@ abstract class UserQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByIsStaff(1234); // WHERE is_staff = 1234
-     * $query->filterByIsStaff(array(12, 34)); // WHERE is_staff IN (12, 34)
-     * $query->filterByIsStaff(array('min' => 12)); // WHERE is_staff > 12
+     * $query->filterByIsStaff(true); // WHERE is_staff = true
+     * $query->filterByIsStaff('yes'); // WHERE is_staff = true
      * </code>
      *
-     * @param     mixed $isStaff The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     boolean|string $isStaff The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
     public function filterByIsStaff($isStaff = null, $comparison = null)
     {
-        if (is_array($isStaff)) {
-            $useMinMax = false;
-            if (isset($isStaff['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_IS_STAFF, $isStaff['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($isStaff['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_IS_STAFF, $isStaff['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
+        if (is_string($isStaff)) {
+            $isStaff = in_array(strtolower($isStaff), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
         return $this->addUsingAlias(UserTableMap::COL_IS_STAFF, $isStaff, $comparison);
@@ -493,37 +479,23 @@ abstract class UserQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByIsSuperuser(1234); // WHERE is_superuser = 1234
-     * $query->filterByIsSuperuser(array(12, 34)); // WHERE is_superuser IN (12, 34)
-     * $query->filterByIsSuperuser(array('min' => 12)); // WHERE is_superuser > 12
+     * $query->filterByIsSuperuser(true); // WHERE is_superuser = true
+     * $query->filterByIsSuperuser('yes'); // WHERE is_superuser = true
      * </code>
      *
-     * @param     mixed $isSuperuser The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     boolean|string $isSuperuser The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
     public function filterByIsSuperuser($isSuperuser = null, $comparison = null)
     {
-        if (is_array($isSuperuser)) {
-            $useMinMax = false;
-            if (isset($isSuperuser['min'])) {
-                $this->addUsingAlias(UserTableMap::COL_IS_SUPERUSER, $isSuperuser['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($isSuperuser['max'])) {
-                $this->addUsingAlias(UserTableMap::COL_IS_SUPERUSER, $isSuperuser['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
+        if (is_string($isSuperuser)) {
+            $isSuperuser = in_array(strtolower($isSuperuser), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
         return $this->addUsingAlias(UserTableMap::COL_IS_SUPERUSER, $isSuperuser, $comparison);

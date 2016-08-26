@@ -9,7 +9,7 @@
  *
  */
 class Controller {
-    private $_message = null;
+    protected $_message = null;
     public $title = "DIY Framework";
 
     /**

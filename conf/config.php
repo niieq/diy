@@ -56,8 +56,6 @@
 
     define('APP_NAME', "diy");
 
-    define('ADMIN_APP_NAME', "admin");
-
     # Secret key. Make sure you don't change this key whilst in production ....
     # Used mostly for hashing ...
     # You could add more hash keys by just defining one.

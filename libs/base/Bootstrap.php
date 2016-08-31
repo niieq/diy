@@ -99,12 +99,6 @@ class Bootstrap {
         return false;
     }
 
-    private function _loadAdminController(){
-        require_once dirname(__DIR__) . "/admin_app/admin.php";
-        $this->_controller = new Admin();
-        $this->_callControllerMethod();
-    }
-
     /**
      * @return bool
      */

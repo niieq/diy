@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="diy" defaultIdMethod="native">
+    <!-- define your tables here -->
+
+    <!-- do not delete this if you plan on using the default user model -->
+    <table name="users" phpName="User">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="first_name" type="varchar" size="50" required="false" />
+        <column name="last_name" type="varchar" size="100" required="false" />
+        <column name="user_name" type="varchar" size="50" required="true" />
+        <column name="email" type="varchar" size="150" required="true" />
+        <column name="password" type="varchar" size="255" required="true" />
+        <column name="is_staff" type="boolean" size="1" required="true" defaultValue="1" />
+        <column name="is_superuser" type="boolean" size="1" required="true" defaultValue="0" />
+        <column name="created_at" type="timestamp" required="false" defaultExpr="CURRENT_TIMESTAMP" />
+        <column name="modified_at" type="timestamp" required="false" defaultExpr="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" />
+
+        <unique name="unq_username">
+            <unique-column name="user_name" />
+        </unique>
+        <unique name="unq_email">
+            <unique-column name="email" />
+        </unique>
+
+        <behavior name="validate">
+            <parameter name="rule1" value="{column: email, validator: Email}" />
+            <parameter name="rule2" value="{column: first_name, validator: Length, options: {max: 50}}" />
+            <parameter name="rule3" value="{column: last_name, validator: Length, options: {max: 100}}" />
+            <parameter name="rule4" value="{column: user_name, validator: Length, options: {max: 50}}" />
+        </behavior>
+    </table>
+</database>

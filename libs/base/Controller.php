@@ -9,7 +9,7 @@
  *
  */
 class Controller {
-    private $_message = null;
+    protected $_message = null;
     public $title = "DIY Framework";
 
     /**
@@ -30,7 +30,7 @@ class Controller {
         (empty($name)) ? die("Expects a name of a model to load!!") : $path = $modelPath . $name . '_model.php';
         if (file_exists($path)) {
             require $path;
-            $modelName = $name . '_Model';
+            $modelName = ucfirst($name) . '_Model';
             $this->model = new $modelName();
         }
     }

@@ -113,6 +113,11 @@ class Bootstrap {
             return false;
         }
 
+        if(!empty($this->_url[0]) && $this->_url[0] === ADMIN_APP_NAME){
+            $this->_loadAdminController();
+            return false;
+        }
+
         $this->_loadController();
         $this->_callControllerMethod();
     }

@@ -24,6 +24,7 @@ class View {
 
         if(isset($this->_viewConfig['templateDir'])){
             $this->_loader = new Twig_Loader_Filesystem($this->_viewConfig['templateDir']);
+
             $this->_twig = new Twig_Environment($this->_loader, array(
                 'cache' => $this->_viewConfig['cacheDir'],
                 'debug' => $this->_viewConfig['debug'],
@@ -47,14 +48,17 @@ class View {
      * @param $templateName
      */
     public function render($templateName) {
-        $templateFile = $templateName . '.twig';
+        $templateFiles = [];
 
-        if(file_exists($this->_viewConfig['templateDir'] . '/' . $templateFile)){
-            echo $this->_twig->render($templateFile, $this->templateData);
-        } else {
-            die("Template does not exist. TemplateDir = {$this->_viewConfig['templateDir']}{$templateFile}");
+        foreach($this->_loader->getPaths() as $path){
+            if(file_exists("{$path}/{$templateName}.twig")){
+                echo $this->_twig->render("{$templateName}.twig", $this->templateData);
+                return true;
+            }
         }
 
         $this->templateData = [];
+        die("Template does not exist. Please make sure you have specified the template file correctly.");
+
     }
 }

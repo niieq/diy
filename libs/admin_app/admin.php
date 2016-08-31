@@ -1,10 +1,16 @@
 <?php
 
 class Admin extends Controller{
+
     public function __construct(){
         parent::__construct();
         $this->title = "DIY Framework Admin";
         $this->view->dexport("title", $this->title);
+
+        include_once("app/administrator.php");
+
+        $this->view->dexport("models", $this->admin->registeredModels());
+        $this->view->dexport("lists", $this->admin->listColumns());
     }
 
     private function _controlAccess(){
@@ -13,13 +19,31 @@ class Admin extends Controller{
         }
     }
 
+    private function _modelUsers(){
+        $lists = $this->admin->listColumns();
+        $users = array();
+        foreach($lists as $model => $list){
+            if($model == "User"){
+                $users = UserQuery::create()->select($list)->orderByCreatedAt()->find();
+            }
+        }
+        return $users;
+    }
+
     public function index(){
         $this->_controlAccess();
-
         $this->view->dexport("title", $this->title);
         $this->view->dexport("message", "This is the admin dashboard");
         $this->view->dexport("user", Session::get("admin"));
         $this->view->render('admin/index');
+    }
+
+    public function users(){
+        $this->title .= " | User CRUD";
+        $this->view->dexport("title", $this->title);
+        $this->view->dexport("users", $this->_modelUsers());
+        $this->view->dexport("lists", $this->admin->listColumns()["User"]);
+        $this->view->render("admin/users");
     }
 
     public function login(){
@@ -75,4 +99,5 @@ class Admin extends Controller{
         Authentication::logout();
         DUtil::redirect(BASE_URL . "admin/login");
     }
+
 }

@@ -22,6 +22,15 @@
                     <span>Dashboard</span>
                 </a>
             </li>
+
+            {% for model in models %}
+                <li>
+                    <a href="#">
+                        {% if model.table == "User" %}<i class="fa fa-group"></i>{% endif %}
+                        <span>{{ model.name }}</span>
+                    </a>
+                </li>
+            {% endfor %}
         </ul>
         <!-- /.sidebar-menu -->
     </section>

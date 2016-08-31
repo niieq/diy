@@ -102,7 +102,6 @@ class Bootstrap {
     private function _loadAdminController(){
         require_once dirname(__DIR__) . "/admin_app/admin.php";
         $this->_controller = new Admin();
-        $this->_controller->loadModel('admin', dirname(__DIR__) . "/admin_app/");
         $this->_callControllerMethod();
     }
 

@@ -2,22 +2,22 @@
 A PHP minimal framework which allows you to control every bit of it.
 
 # HOW TO USE
-1. Clone the repository.
-2. Install [composer](https://getcomposer.org/doc/00-intro.md) inside the root directory of the library or framework.
-3. Run this command to install all dependencies: ``` php composer.phar install```
-4. Edit __./config.php__ to correspnd to the app you are building.
-5. Create a __cache__ dir inside the public folder
-6. It is always recommended that you put your app files in a base directory.
-6. After choosing a basePath make sure you make it writable 
+- Install composer globally. Do the following on a Linux. Visit [here](https://getcomposer.org/doc/00-intro.md) for windows.
 
+```bash
 
-# TODO
-- Integrate an object relational mapper:
-    - Doctrine
-    - Propel
-    - RedBeanPHP
-- PDO exception and error handling
-- Build a frontend(html, css, js) system to accomplish miniature frontend/client tasks
-- Change config file to a .ini file and parse it into php
-- PHPUnit tests to test components
-- Karma tests for the frontend system
+$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+$ php -r "if (hash_file('SHA384', 'composer-setup.php') === 'e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+$ php composer-setup.php
+$ php -r "unlink('composer-setup.php');"
+$ mv composer.phar /usr/local/bin/composer
+
+```
+
+- Create a new project using composer.
+
+```bash
+
+$ composer create-project diy/framework [project_name]
+
+```

@@ -1,7 +1,7 @@
 {
-    "name": "diy/framework",
+    "name": "diy/php-framework",
     "description": "DoItYourself PHP Framework",
-    "homepage": "",
+    "homepage": "https://github.com/diy-framework/diy",
     "keywords": ["do it yourself", "framework"],
     "license": "MIT",
     "authors": [

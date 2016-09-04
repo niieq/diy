@@ -1,5 +1,19 @@
 {
+    "name": "diy/framework",
+    "description": "DoItYourself PHP Framework",
+    "homepage": "",
+    "keywords": ["do it yourself", "framework"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Obed Ademang",
+            "email": "obed.ademang+dev@gmail.com",
+            "homepage": "http://nenepadi.me",
+            "role": "developer"
+        }
+    ],
     "require": {
+        "php": ">=5.4",
         "twig/twig": "~1.0",
         "vlucas/phpdotenv": "^2.2",
         "propel/propel": "~2.0@dev",

@@ -17,8 +17,5 @@
         "propel/propel": "~2.0@dev",
         "monolog/monolog": "^1.21",
         "ircmaxell/password-compat": "^1.0"
-    },
-    "autoload": {
-        "classmap": ["libs/sqlobjects/generated-classes/"]
     }
 }

@@ -1,33 +1,6 @@
 <?php
 
 class DUtil {
-    /**
-     * @param $name
-     * @param $data
-     */
-    public static function send_data($name, $data) {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $_SESSION[$name] = $data;
-    }
-
-    /**
-     * @param $name
-     * @return null
-     */
-    public static function get_data($name) {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if (isset($_SESSION[$name])) {
-            return $_SESSION[$name];
-        } else {
-            return null;
-        }
-    }
 
     /**
      * @param $input
@@ -209,13 +182,61 @@ class DUtil {
         die();
     }
 
+    /**
+     * startsWith - check that a string starts with some character/string
+     *
+     * @param string $haystack
+     * @param string $needle
+     *
+     * @return boolean
+     *
+     */
     public static function startsWith($haystack, $needle) {
         // search backwards starting from haystack length characters from the end
         return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
     }
 
+    /**
+     * endsWith - check that a string ends with some character/string
+     *
+     * @param string $haystack
+     * @param string $needle
+     *
+     * @return boolean
+     *
+     */
     public static function endsWith($haystack, $needle) {
         // search forward starting from end minus needle length characters
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
+    }
+
+    /**
+     * isXmlHttpRequest - check the existence of an ajax object
+     *
+     * @return boolean
+     *
+     */
+    public static function isXmlHttpRequest(){
+        return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') ? true : false;
+    }
+
+    /**
+     * genMessage - change an array into a string;
+     *
+     * @param array $data
+     * @return string
+     *
+     */
+    public static function genMessage($data){
+        $message = "";
+        if(is_array($data)){
+            $message = "<ul>";
+            foreach($data as $key => $value){
+                $message .= "<li><b>" . $key . ":</b> " . $value . "</li>";
+            }
+            $message .= "</ul>";
+        }
+
+        return $message;
     }
 }

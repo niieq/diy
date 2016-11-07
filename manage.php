@@ -38,10 +38,18 @@
             $password = DUtil::read_stdin();
             Authentication::create_superuser($username, $email, $password);
             break;
+        case "generate_secret_key":
+            $characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            $string = '';
+             for ($i = 0; $i < 32; $i++) {
+                  $string .= $characters[mt_rand(0, strlen($characters)-1)];
+            }
+            echo $string;
+            break;
         case "help":
             echo "\n*********************************\n\n";
             echo "The commands to pass are below: \n";
-            echo "\n\tmodel_build\n\tsql_build [--overwrite]\n\thelp\n\tconvert_config\n\tsql_insert\ncreatesuperuser\n";
+            echo "\n\tmodel_build\n\tsql_build [--overwrite]\n\thelp\n\tconvert_config\n\tsql_insert\n\tcreatesuperuser\n\tgenerate_secret_key\n";
             echo "\n*********************************\n\n";
             break;
         default:

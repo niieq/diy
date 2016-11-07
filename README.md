@@ -21,3 +21,11 @@ $ mv composer.phar /usr/local/bin/composer
 $ composer create-project diy/framework [project_name]
 
 ```
+
+- Generate a secret key.
+
+```bash
+	
+$ php manage.py generate_secret_key
+
+```

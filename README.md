@@ -26,6 +26,6 @@ $ composer create-project diy/framework [project_name]
 
 ```bash
 	
-$ php manage.py generate_secret_key
+$ php manage.php generate_secret_key
 
 ```
